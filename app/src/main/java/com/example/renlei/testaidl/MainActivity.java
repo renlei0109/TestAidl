@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -34,7 +35,34 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    bookManager.addBook(new Book(i,"renlei"+i));
+                    bookManager.addBook(new Book(i, "renlei" + i), new IAddBookCallBack.Stub(){
+                        @Override
+                        public void basicTypes(int anInt, long aLong, boolean aBoolean, float aFloat, double aDouble, String aString) throws RemoteException {
+
+                        }
+
+                        @Override
+                        public void onSuccess(final String msg) throws RemoteException {
+                            Log.d("renlei","onSuccess"+msg);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(MainActivity.this,msg,Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onFail(final String msg) throws RemoteException {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(MainActivity.this,msg,Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    });
+
                     i++;
                 } catch (RemoteException e) {
                     e.printStackTrace();

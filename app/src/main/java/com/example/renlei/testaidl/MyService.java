@@ -30,8 +30,12 @@ public class MyService extends Service {
         }
 
         @Override
-        public void addBook(Book book) throws RemoteException {
+        public void addBook(Book book,IAddBookCallBack callBack) throws RemoteException {
             mBooks.add(book);
+            Log.d("renlei","callback"+(callBack==null));
+            if (callBack != null){
+                callBack.onSuccess("成功"+ book.toString());
+            }
         }
     };
 }
