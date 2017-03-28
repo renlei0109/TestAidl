@@ -5,10 +5,10 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:label="MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,7 +20,23 @@
             android:name=".MyService"
             android:enabled="true"
             android:exported="true"
-            android:process=":remote"></service>
+            android:process=":remote" />
+
+        <activity android:name=".BinderPoolActivity"
+            android:label="BinderPoolActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".BinderPoolService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":BinderPoolService" />
+
     </application>
 
 </manifest>
