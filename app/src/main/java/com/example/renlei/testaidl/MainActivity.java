@@ -35,34 +35,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    bookManager.addBook(new Book(i, "renlei" + i), new IAddBookCallBack.Stub(){
-                        @Override
-                        public void basicTypes(int anInt, long aLong, boolean aBoolean, float aFloat, double aDouble, String aString) throws RemoteException {
-
-                        }
-
-                        @Override
-                        public void onSuccess(final String msg) throws RemoteException {
-                            Log.d("renlei","onSuccess"+msg);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(MainActivity.this,msg,Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onFail(final String msg) throws RemoteException {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(MainActivity.this,msg,Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                    });
-
+                    bookManager.addBook(new Book(i, "renlei" + i),callBack);
                     i++;
                 } catch (RemoteException e) {
                     e.printStackTrace();
@@ -106,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d("renlei","onServiceConnected");
             try {
                 bookManager = IBookManager.Stub.asInterface(service);
+                bookManager.registerListener(callBack);
                 service.linkToDeath(deathRecipient,0);
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -117,4 +91,47 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
+
+    IAddBookCallBack callBack =  new IAddBookCallBack.Stub(){
+        @Override
+        public void basicTypes(int anInt, long aLong, boolean aBoolean, float aFloat, double aDouble, String aString) throws RemoteException {
+
+        }
+
+        @Override
+        public void onSuccess(final String msg) throws RemoteException {
+            Log.d("renlei","onSuccess"+msg);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(MainActivity.this,msg,Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        @Override
+        public void onFail(final String msg) throws RemoteException {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(MainActivity.this,msg,Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (bookManager != null){
+            try {
+                bookManager.unRegisterListener(callBack);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
 }

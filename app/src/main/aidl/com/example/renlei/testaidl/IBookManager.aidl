@@ -7,5 +7,6 @@ interface IBookManager {
 
     List<Book>getBookList();
     void addBook(in Book book,IAddBookCallBack callback);
-
+    void registerListener(IAddBookCallBack callback);
+    void unRegisterListener(IAddBookCallBack callback);
 }
